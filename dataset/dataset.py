@@ -4,36 +4,20 @@
 @Author  ：fangpf
 @Date    ：2022/1/12 19:30 
 """
-from torch.utils.data import Dataset
-import os
-import glob
-import numpy as np
-import pandas as pd
-from tqdm import tqdm
-import random
-import time
-import matplotlib
-import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split, GroupKFold, StratifiedKFold, KFold
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
-from torch.utils.data import Dataset, DataLoader
-import segmentation_models_pytorch as smp
-from segmentation_models_pytorch.losses import DiceLoss, SoftCrossEntropyLoss, LovaszLoss
-import cv2
-from pytorch_toolbelt import losses as L
-import albumentations as A
-from albumentations.pytorch import ToTensorV2
-from skimage import io
 import warnings
+
+import albumentations as A
+import cv2
+import torch
+from albumentations.pytorch import ToTensorV2
+from torch.utils.data import Dataset
+
 warnings.filterwarnings("ignore")
 
 
-def get_train_transforms():
+def get_train_transforms(CFG):
     return A.Compose([
-            A.RandomResizedCrop(448, 448),
+            A.RandomResizedCrop(CFG.img_size, CFG.img_size),
             A.Transpose(p=0.5),
             A.HorizontalFlip(p=0.5),
             A.VerticalFlip(p=0.5),
