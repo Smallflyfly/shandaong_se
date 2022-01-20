@@ -17,7 +17,7 @@ class MyModel(nn.Module):
     def __init__(self, num_classes=5):
         super().__init__()
         self.model = smp.UnetPlusPlus(
-                encoder_name="resnet34",
+                encoder_name="resnet101",
                 encoder_weights="imagenet",
                 in_channels=3,
                 decoder_attention_type="scse",

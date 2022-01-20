@@ -13,15 +13,16 @@ import torch
 
 warnings.filterwarnings("ignore")
 
+
 class Config:
     train_image_paths = './data/train_GF/*.tif' #注意这里的要加*.tif
     train_label_paths = './data/train_LT/*.tif'
-    test_image_paths = './data/test/*.tif'
+    test_image_paths = './data/test_GF/*.tif'
     seed = 20220 #随机种子，使代码可复现
-    epochs = 14
-    batch_size = 16 #训练的批处理大小
-    n_fold = 5 #折数
-    learning_rate = 1e-3 #学习率，具体的学习率、策略、损失函数等要在正文的代码里设置
+    epochs = 20
+    batch_size = 8 #训练的批处理大小
+    n_fold = 10 #折数
+    learning_rate = 0.5e-4 #学习率，具体的学习率、策略、损失函数等要在正文的代码里设置
     img_size = 256 #调整的图片尺寸
     num_classes = 6 #类别数目
     print_freq = 100 #训练输出的频率
@@ -32,8 +33,8 @@ class Config:
     if not os.path.isdir(result_save_dir):
         os.makedirs(result_save_dir)
 
+
 def seed_it(seed):
-#   random.seed(seed)
     os.environ["PYTHONSEED"] = str(seed)
     np.random.seed(seed)
     torch.cuda.manual_seed(seed)

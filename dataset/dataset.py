@@ -17,19 +17,20 @@ warnings.filterwarnings("ignore")
 
 def get_train_transforms(CFG):
     return A.Compose([
-            A.RandomResizedCrop(CFG.img_size, CFG.img_size),
+            # A.RandomResizedCrop(CFG.img_size, CFG.img_size),
+            A.Resize(CFG.img_size, CFG.img_size),
             A.Transpose(p=0.5),
             A.HorizontalFlip(p=0.5),
-            A.VerticalFlip(p=0.5),
+            # A.VerticalFlip(p=0.5),
             A.ShiftScaleRotate(p=0.25),
             A.RandomRotate90(p=0.25),
             A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], max_pixel_value=1023.0, p=1.0), #注意这里的最大像素是1023
             ToTensorV2(p=1.0),
         ], p=1.)
 
-def get_val_transforms():
+def get_val_transforms(CFG):
     return A.Compose([
-            A.Resize(448, 448),
+            A.Resize(CFG.img_size, CFG.img_size),
             A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], max_pixel_value=1023.0, p=1.0),
             ToTensorV2(p=1.0),
         ], p=1.)
