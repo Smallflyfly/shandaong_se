@@ -110,6 +110,9 @@ def build_optimizer(model, optim='adam', lr=0.005, weight_decay=5e-04, momentum=
             alpha=rmsprop_alpha,
         )
 
+    elif optim == 'AdamW':
+        optimizer = torch.optim.AdamW(param_groups,  lr=lr, weight_decay=weight_decay)
+
     return optimizer
 
 
@@ -143,6 +146,10 @@ def build_scheduler(optimizer, lr_scheduler='single_step', stepsize=1, gamma=0.1
     elif lr_scheduler == 'cosine':
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
             optimizer, float(max_epoch))
+
+    elif lr_scheduler == 'cosine_anneal_warm_restarts':
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, T_0=2, T_mult=2, eta_min=1e-6,
+                                                                         last_epoch=-1)
 
     return scheduler
 

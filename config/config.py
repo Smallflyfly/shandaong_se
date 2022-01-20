@@ -6,6 +6,7 @@
 """
 
 import os
+import random
 import warnings
 
 import numpy as np
@@ -32,9 +33,11 @@ class Config:
         os.makedirs(model_save_dir)
     if not os.path.isdir(result_save_dir):
         os.makedirs(result_save_dir)
+    net_name = 'Unet'
 
 
 def seed_it(seed):
+    random.seed(seed)
     os.environ["PYTHONSEED"] = str(seed)
     np.random.seed(seed)
     torch.cuda.manual_seed(seed)

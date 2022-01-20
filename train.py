@@ -9,19 +9,17 @@ import glob
 import warnings
 
 import numpy as np
+import tensorboardX as tb
 import torch
 from pytorch_toolbelt import losses as L
-from segmentation_models_pytorch.losses import DiceLoss, SoftCrossEntropyLoss, FocalLoss
-from skimage import io
+from segmentation_models_pytorch.losses import DiceLoss, FocalLoss
 from sklearn.model_selection import KFold
 from torch.utils.data import DataLoader
-from tqdm import tqdm
 
 from config.config import Config, seed_it
 from dataset.dataset import MyDataset, get_train_transforms, get_val_transforms
-from model.model import MyModel
-from utils.utils import eda_visual, build_optimizer
-import tensorboardX as tb
+from model.model import UnetPP
+from utils.utils import build_optimizer
 
 warnings.filterwarnings("ignore")
 
@@ -121,7 +119,7 @@ if __name__ == "__main__":
     folds = KFold(n_splits=CFG.n_fold, shuffle=True, random_state=CFG.seed).split(range(len(train_image_paths)),
                                                                                   range(len(train_label_paths)))  # 多折
     # 初始化模型
-    model = MyModel(num_classes=CFG.num_classes).to(device)
+    model = UnetPP(num_classes=CFG.num_classes).to(device)
     # 优化器,学习率策略，损失函数
     # optimizer = torch.optim.AdamW(model.parameters(), lr=CFG.learning_rate, weight_decay=1e-3)
     optimizer = build_optimizer(model, optim='adam', lr=8e-4)

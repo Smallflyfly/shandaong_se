@@ -19,14 +19,22 @@ def get_train_transforms(CFG):
     return A.Compose([
             # A.RandomResizedCrop(CFG.img_size, CFG.img_size),
             A.Resize(CFG.img_size, CFG.img_size),
-            A.Transpose(p=0.5),
+            # A.Transpose(p=0.5),
             A.HorizontalFlip(p=0.5),
-            # A.VerticalFlip(p=0.5),
+            A.VerticalFlip(p=0.5),
             A.ShiftScaleRotate(p=0.25),
             A.RandomRotate90(p=0.25),
             A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], max_pixel_value=1023.0, p=1.0), #注意这里的最大像素是1023
             ToTensorV2(p=1.0),
+            A.OneOf([
+                A.RandomContrast(),
+                A.RandomGamma(),
+                A.RandomBrightness(),
+                A.ColorJitter(brightness=0.07, contrast=0.07,
+                              saturation=0.1, hue=0.1, always_apply=False, p=0.3),
+            ], p=0.3)
         ], p=1.)
+
 
 def get_val_transforms(CFG):
     return A.Compose([
@@ -35,6 +43,7 @@ def get_val_transforms(CFG):
             ToTensorV2(p=1.0),
         ], p=1.)
 
+
 class MyDataset(Dataset):
     def __init__(self, image_paths, label_paths, transforms=None, mode='train'):
         self.image_paths = image_paths
@@ -42,6 +51,7 @@ class MyDataset(Dataset):
         self.transforms = transforms
         self.mode = mode
         self.len = len(image_paths)
+
     def __getitem__(self, index):
         img = cv2.imread(self.image_paths[index], cv2.IMREAD_UNCHANGED)
         if self.mode == "train":
@@ -51,5 +61,6 @@ class MyDataset(Dataset):
         elif self.mode == "test":
             augments = self.transforms(image=img)
             return augments['image']
+
     def __len__(self):
         return self.len
